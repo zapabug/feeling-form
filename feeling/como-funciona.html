@@ -78,11 +78,17 @@ Para responder: AGENDAR MNT-000003 AAAA-MM-DD, FEITO MNT-000003 ou DISPENSAR MNT
       <tr><td><code>AGENDAR MNT-xxxxxx</code> AAAA-MM-DD</td><td>Marca a data de uma manutenção.</td></tr>
       <tr><td><code>FEITO MNT-xxxxxx</code> / <code>DISPENSAR MNT-xxxxxx</code></td><td>Fecha uma manutenção (feita / não era nada).</td></tr>
       <tr><td>Foto de uma folha de serviço</td><td>O assistente lê a folha e cria um rascunho. Confirmar: <code>FOLHA OK</code> nº, apagar: <code>FOLHA APAGAR</code> nº.</td></tr>
+      <tr><td><code>CANCELAR</code> data tour<code>:</code> motivo</td><td>Cancelar um tour nesse dia (ex.: <code>CANCELAR 24/10 West Tour: estrada fechada</code>, ou <code>TODOS</code>). Primeiro mostra quem vai ser avisado; com <code>CANCELAR OK</code> + código avisa todos, cada um na sua língua.</td></tr>
       <tr><td><code>.erro</code> o que correu mal</td><td>Avisa o programador de um erro do assistente (na última conversa, ou <code>.erro C-12 …</code>).</td></tr>
       <tr><td><code>.ideia</code> texto</td><td>Ideia, pedido ou pergunta para o programador.</td></tr>
       <tr><td><code>AJUDA</code></td><td>Mostra a lista de comandos.</td></tr>
     </tbody>
   </table></div>
+
+  <h3>Lembretes automáticos</h3>
+  <p>Ao fim da tarde (18:00), cada cliente com reserva <strong>confirmada</strong> para amanhã recebe um lembrete,
+    com a nota que escreveram no <code>CONFIRMAR</code> (ex.: hora de recolha). Quem faz dois dias seguidos recebe
+    só um, antes do primeiro. O grupo de operações recebe a lista: <code>Lembretes de amanhã enviados: …</code></p>
 
   <h2>3. Comandos dentro da conversa com um cliente</h2>
   <p>Quem tem o telefone ou o WhatsApp da Feeling pode escrever estes comandos <strong>dentro da conversa de
