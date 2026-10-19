@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Questionário</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<main>
+  <p><a href="./">← Início</a></p>
+  <h1 id="title"></h1>
+  <p class="muted" id="byline"></p>
+  <p id="intro"></p>
+  <p class="muted" id="hint"></p>
+
+  <label for="who" id="whoLabel"></label>
+  <input type="text" id="who" data-key="who">
+
+  <h2 id="tasksTitle"></h2>
+  <p class="muted" id="tasksIntro"></p>
+  <div id="tasks"></div>
+
+  <h2 id="questionsTitle"></h2>
+  <div class="card" id="questions"></div>
+
+  <section id="pickupsSection">
+    <h2 id="pickupsTitle"></h2>
+    <p class="muted" id="pickupsIntro"></p>
+    <div class="card">
+      <div id="pickups"></div>
+      <button type="button" class="link" id="addPickup"></button>
+      <label for="noPickup" id="noPickupLabel"></label>
+      <textarea id="noPickup" data-key="noPickup"></textarea>
+    </div>
+  </section>
+</main>
+
+<div class="bar">
+  <div class="bar-inner">
+    <button type="button" class="primary" id="send"></button>
+    <button type="button" id="copy"></button>
+    <div id="status" role="status" aria-live="polite"></div>
+  </div>
+</div>
+
+<script src="form-data.js"></script>
+<script src="../assets/form.js"></script>
+</body>
+</html>
