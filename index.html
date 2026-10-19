@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tarefas do escritório</title>
+<style>
+  :root {
+    --bg: #f6f4ef; --card: #ffffff; --text: #1d1d1b; --muted: #6b6a66;
+    --line: #e2dfd6; --accent: #1f7a5c; --accent-text: #ffffff; --chip: #eef3f0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #151614; --card: #1f201d; --text: #ecebe6; --muted: #a3a29b;
+      --line: #34352f; --accent: #3fae86; --accent-text: #0e1410; --chip: #233029;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 24px 16px 200px; }
+  h1 { font-size: 1.6rem; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 1.15rem; margin: 32px 0 12px; }
+  p { margin: 0 0 12px; }
+  .muted { color: var(--muted); font-size: .95rem; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px; margin-bottom: 12px;
+  }
+  .task-title { font-weight: 600; margin-bottom: 4px; }
+  .task-now { color: var(--muted); font-size: .92rem; margin-bottom: 12px; }
+  label { display: block; font-size: .85rem; color: var(--muted); margin: 10px 0 4px; }
+  input[type=text], textarea {
+    width: 100%; font: inherit; color: var(--text); background: var(--bg);
+    border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
+  }
+  textarea { min-height: 72px; resize: vertical; }
+  input:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 12px; }
+  @media (max-width: 520px) { .row { grid-template-columns: 1fr; } }
+  .choices { display: flex; gap: 8px; flex-wrap: wrap; }
+  .choices label {
+    margin: 0; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+    background: var(--chip); color: var(--text); border-radius: 999px; padding: 6px 14px; font-size: .95rem;
+  }
+  .choices input { accent-color: var(--accent); }
+  .pickup { border-top: 1px dashed var(--line); padding-top: 8px; margin-top: 8px; }
+  .pickup:first-child { border-top: 0; margin-top: 0; padding-top: 0; }
+  button {
+    font: inherit; border-radius: 10px; padding: 12px 16px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--card); color: var(--text);
+  }
+  button.primary { background: var(--accent); color: var(--accent-text); border-color: var(--accent); font-weight: 600; }
+  button.link { border: 0; background: none; color: var(--accent); padding: 8px 0; }
+  .bar {
+    position: fixed; left: 0; right: 0; bottom: 0; background: var(--card);
+    border-top: 1px solid var(--line); padding: 12px 16px;
+  }
+  .bar-inner { max-width: 760px; margin: 0 auto; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .bar-inner button { flex: 1 1 200px; }
+  #status { width: 100%; font-size: .9rem; color: var(--muted); min-height: 1.2em; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Tarefas do escritório: o que dá para automatizar?</h1>
+  <p class="muted">Para Feeling Madeira Tours &amp; Walks · de zapa</p>
+  <p>Quero perceber quanto do vosso trabalho diário o assistente de WhatsApp pode fazer
+    <strong>bem e com segurança</strong>: o assistente trata do que são dados e regras, e as pessoas
+    ficam com o que precisa de decisão. Isto <strong>não é uma proposta</strong>, é só para perceber o vosso dia a dia.</p>
+  <p class="muted">Uma palavra ou uma frase chega. O que escreverem fica guardado neste navegador até enviarem.
+    No fim, carreguem em <strong>Enviar por WhatsApp</strong> e escolham a conversa comigo.</p>
+
+  <label for="who">Quem está a preencher?</label>
+  <input type="text" id="who" data-key="who" placeholder="O vosso nome">
+
+  <h2>As tarefas</h2>
+  <p class="muted">A frase em cinzento é como eu vejo a tarefa hoje. Onde há "(?)" não tenho a certeza, corrijam à vontade nas notas.</p>
+  <div id="tasks"></div>
+
+  <h2>Algumas perguntas</h2>
+  <div class="card">
+    <label for="q1">1. Que tarefas faltam nesta lista?</label>
+    <textarea id="q1" data-key="q1"></textarea>
+    <label for="q2">2. Qual é a tarefa que mais tempo vos tira, ou que mais vos chateia?</label>
+    <textarea id="q2" data-key="q2"></textarea>
+    <label for="q3">3. Onde chegam as reservas hoje? (site, WhatsApp, telefone, GetYourGuide, Viator, hotéis, agências…)</label>
+    <textarea id="q3" data-key="q3"></textarea>
+    <label for="q5">4. Há alguma tarefa que nunca querem que seja automática?</label>
+    <textarea id="q5" data-key="q5"></textarea>
+  </div>
+
+  <h2>Locais de recolha habituais</h2>
+  <p class="muted">Hotéis onde vão buscar os clientes e pontos de encontro. Para cada um: nome, morada ou referência
+    (cruzamento, número da porta, edifício conhecido) e a hora habitual de recolha.</p>
+  <div class="card">
+    <div id="pickups"></div>
+    <button type="button" class="link" id="addPickup">+ Adicionar local</button>
+    <label for="noPickup">Há zonas ou ruas onde não fazem recolha?</label>
+    <textarea id="noPickup" data-key="noPickup"></textarea>
+  </div>
+</main>
+
+<div class="bar">
+  <div class="bar-inner">
+    <button type="button" class="primary" id="send">Enviar por WhatsApp</button>
+    <button type="button" id="copy">Copiar respostas</button>
+    <div id="status" role="status" aria-live="polite"></div>
+  </div>
+</div>
+
+<script>
+const TASKS = [
+  ['Responder a pedidos de informação no WhatsApp', 'O assistente já responde'],
+  ['Dar preços e totais para o grupo', 'O assistente já calcula, com os preços do site'],
+  ['Dias em que cada tour se realiza', 'Vem do site, mas há dias errados (ver relatório enviado)'],
+  ['Receber um pedido de reserva', 'O assistente prepara o pedido; o escritório confirma com um clique'],
+  ['Perguntas que o assistente não sabe responder', 'O assistente pergunta ao escritório e pode memorizar a resposta'],
+  ['Avarias e manutenção das viaturas', 'O assistente lê os grupos da equipa e regista'],
+  ['Saber quantos lugares ainda há num tour', 'Feito à mão (o escritório sabe)'],
+  ['Combinar o local e a hora de recolha', 'Feito à mão. Com a vossa lista de locais habituais, o assistente pode sugerir o mais próximo a partir do que o cliente indicar (hotel, cruzamento, número da porta)'],
+  ['Lembrete ao cliente na véspera, com a hora de recolha', 'Não é feito (?)'],
+  ['Cancelar um tour (tempo, segurança) e avisar todos os clientes', 'Feito à mão, um a um (?)'],
+  ['Folha de serviço diária', 'Em papel, depois fotografada'],
+  ['Enviar aos motoristas o trabalho do dia', 'Pelo WhatsApp, à mão'],
+  ['Motoristas avisam de algo fora do normal (cliente que não aparece, deixado noutro sítio)', 'Sem registo fixo (?)'],
+  ['Receber o pagamento', 'Pela loja do site (PayPal ou transferência)'],
+  ['Faturas', ''],
+  ['Listas para o seguro', ''],
+  ['Manter o site atualizado (preços, dias, tours)', 'Feito à mão'],
+];
+const CHOICES = ['Sim', 'Não', 'Talvez'];
+const STORE_KEY = 'feeling-form-v1';
+
+// --- draft storage (per browser; never required) ---
+function loadDraft() {
+  try { return JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch (e) { return {}; }
+}
+function saveDraft() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(collect())); } catch (e) { /* private mode: fine */ }
+}
+
+// --- build the task cards ---
+const tasksEl = document.getElementById('tasks');
+TASKS.forEach(([title, now], i) => {
+  const n = i + 1;
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="task-title">${n}. ${title}</div>
+    ${now ? `<div class="task-now">${now}</div>` : '<div class="task-now">&nbsp;</div>'}
+    <div class="row">
+      <div><label for="t${n}who">Quem faz</label><input type="text" id="t${n}who" data-key="t${n}who" placeholder="escritório, motorista, gerente…"></div>
+      <div><label for="t${n}time">Tempo</label><input type="text" id="t${n}time" data-key="t${n}time" placeholder="ex.: 30 min/dia"></div>
+    </div>
+    <label>Automatizar?</label>
+    <div class="choices">${CHOICES.map((c) => `<label><input type="radio" name="t${n}auto" value="${c}" data-key="t${n}auto"> ${c}</label>`).join('')}</div>
+    <label for="t${n}notes">Notas</label>
+    <input type="text" id="t${n}notes" data-key="t${n}notes" placeholder="o que nos devemos lembrar">`;
+  tasksEl.appendChild(card);
+});
+
+// --- pickup rows ---
+const pickupsEl = document.getElementById('pickups');
+function addPickup(p = {}) {
+  const div = document.createElement('div');
+  div.className = 'pickup';
+  div.innerHTML = `
+    <div class="row">
+      <div><label>Nome do local</label><input type="text" data-p="name" placeholder="ex.: Hotel Savoy Palace"></div>
+      <div><label>Hora habitual</label><input type="text" data-p="time" placeholder="ex.: West 08:50, East 09:00"></div>
+    </div>
+    <label>Morada ou referência</label>
+    <input type="text" data-p="where" placeholder="ex.: paragem em frente, Av. do Infante 56">
+    <button type="button" class="link" data-remove>Remover</button>`;
+  div.querySelectorAll('[data-p]').forEach((el) => { el.value = p[el.dataset.p] || ''; });
+  div.querySelector('[data-remove]').addEventListener('click', () => { div.remove(); saveDraft(); });
+  pickupsEl.appendChild(div);
+}
+document.getElementById('addPickup').addEventListener('click', () => { addPickup(); });
+
+// --- collect / restore ---
+function collect() {
+  const data = {};
+  document.querySelectorAll('[data-key]').forEach((el) => {
+    if (el.type === 'radio') { if (el.checked) data[el.dataset.key] = el.value; }
+    else data[el.dataset.key] = el.value;
+  });
+  data.pickups = [...pickupsEl.querySelectorAll('.pickup')].map((row) => {
+    const p = {};
+    row.querySelectorAll('[data-p]').forEach((el) => { p[el.dataset.p] = el.value; });
+    return p;
+  });
+  return data;
+}
+function restore(data) {
+  document.querySelectorAll('[data-key]').forEach((el) => {
+    const v = data[el.dataset.key];
+    if (v === undefined) return;
+    if (el.type === 'radio') el.checked = el.value === v;
+    else el.value = v;
+  });
+  const rows = Array.isArray(data.pickups) && data.pickups.length ? data.pickups : [{}];
+  rows.forEach(addPickup);
+}
+restore(loadDraft());
+document.addEventListener('input', saveDraft);
+document.addEventListener('change', saveDraft);
+
+// --- the WhatsApp message: only what was filled in ---
+function message() {
+  const d = collect();
+  const t = (s) => (s || '').trim();
+  const lines = ['*Tarefas Feeling: respostas*'];
+  if (t(d.who)) lines.push(`Preenchido por: ${t(d.who)}`);
+  lines.push('');
+  TASKS.forEach(([title], i) => {
+    const n = i + 1;
+    const parts = [t(d[`t${n}who`]), t(d[`t${n}time`]), t(d[`t${n}auto`])].filter(Boolean);
+    const notes = t(d[`t${n}notes`]);
+    if (!parts.length && !notes) return;
+    lines.push(`${n}. ${title}: ${parts.join(' · ')}${notes ? `${parts.length ? ' · ' : ''}"${notes}"` : ''}`);
+  });
+  const qs = [
+    ['q1', 'Tarefas em falta'], ['q2', 'O que mais tempo tira'],
+    ['q3', 'Onde chegam as reservas'], ['q5', 'Nunca automatizar'],
+  ];
+  const answered = qs.filter(([k]) => t(d[k]));
+  if (answered.length) {
+    lines.push('');
+    answered.forEach(([k, label]) => lines.push(`*${label}:* ${t(d[k])}`));
+  }
+  const pickups = d.pickups.filter((p) => t(p.name) || t(p.where) || t(p.time));
+  if (pickups.length || t(d.noPickup)) {
+    lines.push('', '*Locais de recolha:*');
+    pickups.forEach((p) => lines.push(`- ${[t(p.name), t(p.where), t(p.time)].filter(Boolean).join(' · ')}`));
+    if (t(d.noPickup)) lines.push(`Sem recolha: ${t(d.noPickup)}`);
+  }
+  return lines.join('\n');
+}
+
+const statusEl = document.getElementById('status');
+function setStatus(s) { statusEl.textContent = s; }
+
+document.getElementById('send').addEventListener('click', () => {
+  const text = message();
+  const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+  // very long links can be cut off by WhatsApp - then copying is safer
+  if (url.length > 6000) {
+    setStatus('As respostas são longas: carreguem em "Copiar respostas" e colem na conversa comigo.');
+    return;
+  }
+  setStatus('A abrir o WhatsApp… escolham a conversa comigo e carreguem em enviar.');
+  window.open(url, '_blank', 'noopener');
+});
+
+document.getElementById('copy').addEventListener('click', async () => {
+  const text = message();
+  try {
+    await navigator.clipboard.writeText(text);
+    setStatus('Copiado! Colem na conversa comigo no WhatsApp.');
+  } catch (e) {
+    // fallback: select the text in a temporary box
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); setStatus('Copiado! Colem na conversa comigo no WhatsApp.'); }
+    catch (e2) { setStatus('Não foi possível copiar automaticamente.'); }
+    ta.remove();
+  }
+});
+</script>
+</body>
+</html>
