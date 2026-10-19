@@ -54,7 +54,7 @@ window.FORM = {
   },
 
   ui: {
-    who: 'Quem faz', whoPh: 'escritório, motorista, gerente…',
+    who: 'Quem faz', whoPh: 'ex.: escritório',
     time: 'Tempo', timePh: 'ex.: 30 min/dia',
     auto: 'Automatizar?', choices: ['Sim', 'Não', 'Talvez'],
     notes: 'Notas', notesPh: 'o que nos devemos lembrar',

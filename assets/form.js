@@ -30,14 +30,13 @@
     card.innerHTML = `
       <div class="task-title">${n}. ${esc(title)}</div>
       <div class="task-now">${now ? esc(now) : '&nbsp;'}</div>
-      <div class="row">
+      <div class="fields">
         <div><label for="t${n}who">${esc(F.ui.who)}</label><input type="text" id="t${n}who" data-key="t${n}who" placeholder="${esc(F.ui.whoPh)}"></div>
         <div><label for="t${n}time">${esc(F.ui.time)}</label><input type="text" id="t${n}time" data-key="t${n}time" placeholder="${esc(F.ui.timePh)}"></div>
-      </div>
-      <label>${esc(F.ui.auto)}</label>
-      <div class="choices">${F.ui.choices.map((c) => `<label><input type="radio" name="t${n}auto" value="${esc(c)}" data-key="t${n}auto"> ${esc(c)}</label>`).join('')}</div>
-      <label for="t${n}notes">${esc(F.ui.notes)}</label>
-      <input type="text" id="t${n}notes" data-key="t${n}notes" placeholder="${esc(F.ui.notesPh)}">`;
+        <div class="wide"><label id="t${n}autoL">${esc(F.ui.auto)}</label>
+          <div class="choices" role="radiogroup" aria-labelledby="t${n}autoL">${F.ui.choices.map((c) => `<label><input type="radio" name="t${n}auto" value="${esc(c)}" data-key="t${n}auto"> ${esc(c)}</label>`).join('')}</div></div>
+        <div class="wide"><label for="t${n}notes">${esc(F.ui.notes)}</label><input type="text" id="t${n}notes" data-key="t${n}notes" placeholder="${esc(F.ui.notesPh)}"></div>
+      </div>`;
     $('tasks').appendChild(card);
   });
 

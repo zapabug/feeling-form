@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Como funciona</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<main class="doc">
+  <a class="back" href="./">← Início</a>
+  <h1>Como funciona o assistente de WhatsApp</h1>
+  <p class="muted">Guia para a equipa da Feeling Madeira · de zapa</p>
+
+  <p>O assistente responde aos clientes no WhatsApp da Feeling. Quando precisa de uma pessoa (uma reserva
+    para confirmar, uma pergunta que não sabe responder, um cliente que quer falar com alguém), escreve no
+    <strong>grupo de operações</strong> com um cartão. Vocês respondem no mesmo grupo com um comando curto,
+    ou com um clique no painel no computador.</p>
+
+  <div class="note"><p><strong>O mais importante:</strong> o assistente <strong>nunca confirma uma reserva
+    sozinho</strong>. Só vocês confirmam. E quando escrevem vocês mesmos a um cliente, o assistente cala-se
+    nessa conversa.</p></div>
+
+  <h2>1. Os cartões que chegam ao grupo de operações</h2>
+  <p>Por agora os cartões chegam em inglês. Cada um tem uma referência (<code>B-…</code>, <code>AQ-…</code>,
+    <code>C-…</code>, <code>MNT-…</code>) que usam no comando.</p>
+
+  <h3>Pedido de reserva</h3>
+  <p>Um cliente aceitou o preço e pediu para avançar. Ainda não está reservado.</p>
+  <pre class="msg">[BOOKING REQUEST B-000005]
+Tour: West Tour
+Date: Sat, 24 Oct 2026
+Pax: 2 (Minibus)
+Quote: €70 (€35 pp)
+Client: 351912345678
+Confirm or decline on the dashboard.</pre>
+  <p>Responder: <code>CONFIRM B-000005</code> ou <code>DECLINE B-000005 está cheio nesse dia</code>.
+    O cliente recebe a resposta na língua dele, com a vossa nota.</p>
+
+  <h3>Pergunta para o escritório</h3>
+  <p>O cliente perguntou algo que o assistente não sabe. O cliente fica a saber que perguntaram ao escritório.</p>
+  <pre class="msg">[QUESTION AQ-000012]
+From: 351912345678
+"Can we bring a dog on the Nuns Valley tour?"</pre>
+  <p>Responder: <code>ANSWER AQ-000012 Sim, cães pequenos são bem-vindos.</code> A resposta chega ao cliente
+    tal e qual. Se a resposta serve para todos os clientes, usem <code>LEARN</code> em vez de
+    <code>ANSWER</code>: o assistente memoriza-a e responde sozinho da próxima vez.</p>
+
+  <h3>Cliente precisa de uma pessoa</h3>
+  <p>O cliente pediu uma pessoa, está zangado, ou o assistente não deve continuar. O assistente cala-se nessa conversa.</p>
+  <pre class="msg">[NEEDS A PERSON C-16]
+From: 351912345678
+Reason: complaint
+To take over, reply here. To put the bot back: RESUME C-16</pre>
+  <p>Falem com o cliente diretamente no WhatsApp. Quando acabarem: <code>RESUME C-16</code> e o assistente volta.</p>
+
+  <h3>Avaria ou manutenção</h3>
+  <p>Alguém da equipa falou de um problema numa viatura num grupo da equipa.</p>
+  <pre class="msg">[MAINTENANCE CALL MNT-000003]
+Asset: Minibus 2
+Priority: HIGH
+Issues: brakes</pre>
+  <p>Responder: <code>SCHEDULE MNT-000003 2026-10-22</code>, <code>DONE MNT-000003</code> ou <code>DISMISS MNT-000003</code>.</p>
+
+  <h2>2. Comandos no grupo de operações</h2>
+  <p>Maiúsculas ou minúsculas, tanto faz. O hífen da referência também é opcional (<code>B5</code> funciona).</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Comando</th><th>O que faz</th></tr></thead>
+    <tbody>
+      <tr><td><code>CONFIRM B-xxxxxx</code> [nota]</td><td>Confirma a reserva. O cliente é avisado, com a nota se houver (ex.: hora de recolha).</td></tr>
+      <tr><td><code>DECLINE B-xxxxxx</code> [motivo]</td><td>Recusa a reserva. O cliente é avisado com o motivo.</td></tr>
+      <tr><td><code>ANSWER AQ-xxxxxx</code> texto</td><td>Responde à pergunta de um cliente. O texto segue tal e qual.</td></tr>
+      <tr><td><code>LEARN AQ-xxxxxx</code> texto</td><td>Responde <strong>e</strong> memoriza para os próximos clientes. Sem texto, memoriza a resposta já dada.</td></tr>
+      <tr><td><code>RESUME C-xx</code></td><td>Devolve a conversa ao assistente depois de uma pessoa ter tratado dela.</td></tr>
+      <tr><td><code>STATUS</code></td><td>Resumo do que está pendente: reservas, perguntas, conversas com pessoas, manutenção.</td></tr>
+      <tr><td><code>SCHEDULE MNT-xxxxxx</code> AAAA-MM-DD</td><td>Marca a data de uma manutenção.</td></tr>
+      <tr><td><code>DONE MNT-xxxxxx</code> / <code>DISMISS MNT-xxxxxx</code></td><td>Fecha uma manutenção (feita / não era nada).</td></tr>
+      <tr><td>Foto de uma folha de serviço</td><td>O assistente lê a folha e cria um rascunho. Confirmar: <code>SHEET OK</code> nº, apagar: <code>SHEET DROP</code> nº.</td></tr>
+      <tr><td><code>.bug</code> o que correu mal</td><td>Avisa o programador de um erro do assistente (na última conversa, ou <code>.bug C-12 …</code>).</td></tr>
+      <tr><td><code>.idea</code> texto</td><td>Ideia, pedido ou pergunta para o programador.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>3. Comandos dentro da conversa com um cliente</h2>
+  <p>Quem tem o telefone ou o WhatsApp da Feeling pode escrever estes comandos <strong>dentro da conversa de
+    um cliente</strong>. A mensagem do comando é apagada logo a seguir (o cliente vê "mensagem apagada") e a
+    confirmação aparece na vossa conversa "Mensagem para mim".</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Comando</th><th>O que faz nessa conversa</th></tr></thead>
+    <tbody>
+      <tr><td><code>.stop</code></td><td>O assistente cala-se <strong>até</strong> escreverem <code>.start</code>.</td></tr>
+      <tr><td><code>.pause</code></td><td>O assistente cala-se; volta sozinho depois de 12 h sem mensagens do cliente.</td></tr>
+      <tr><td><code>.start</code></td><td>O assistente volta a responder.</td></tr>
+      <tr><td><code>.new</code></td><td>Recomeça do zero: o assistente esquece a reserva em curso e as mensagens anteriores.</td></tr>
+      <tr><td><code>.save</code> nota</td><td>Guarda a conversa para mais tarde (aparece no painel).</td></tr>
+      <tr><td><code>.bug</code> nota</td><td>Avisa o programador de um erro nesta conversa.</td></tr>
+      <tr><td><code>.stopall</code> / <code>.startall</code></td><td>Desliga / liga o assistente em <strong>todas</strong> as conversas de uma vez.</td></tr>
+      <tr><td><code>.help</code></td><td>Mostra esta lista.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>4. Regras que o assistente segue sempre</h2>
+  <ul>
+    <li><strong>Vocês mandam.</strong> <code>.stop</code> e <code>.stopall</code> ganham a tudo: nada automático os desfaz.</li>
+    <li>Se escreverem vocês a um cliente, o assistente <strong>pausa</strong> nessa conversa, para não falarem os dois ao mesmo tempo.</li>
+    <li>Nunca diz que uma reserva está confirmada, nem que há lugar: isso é sempre com vocês.</li>
+    <li>Os preços e os dias vêm do site. Se o site estiver errado, o assistente também erra. Por isso é importante corrigir o site.</li>
+    <li>Dá sempre o total para o grupo, e pergunta quantas pessoas são antes de dar preços.</li>
+    <li>Nunca diz que é um robô ou uma inteligência artificial.</li>
+  </ul>
+
+  <h2>5. O painel no computador</h2>
+  <p>Tudo o que está acima também se faz com um clique no painel: <strong>Reservas</strong> (confirmar,
+    recusar), <strong>Perguntas</strong> (responder, "lembrar para os próximos clientes"),
+    <strong>Conversas</strong> (ver tudo em direto, responder, devolver ao assistente) e
+    <strong>Manutenção</strong>.</p>
+
+  <p><a href="questionario.html">Ir para o questionário →</a></p>
+</main>
+</body>
+</html>
