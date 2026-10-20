@@ -38,6 +38,16 @@ Para responder: CONFIRMAR B-000005 [nota] ou RECUSAR B-000005 [motivo] (ou no pa
   <p>Ex.: <code>CONFIRMAR B-000005 recolha às 08:50 no Savoy</code> ou <code>RECUSAR B-000005 está cheio nesse dia</code>.
     O cliente recebe a resposta na língua dele, com a vossa nota.</p>
 
+  <h3>Pedido de um parceiro (hotel, agência)</h3>
+  <p>Uma receção de hotel ou agência pediu um tour para um hóspede. Sem preços: a tarifa e o pagamento ficam com vocês.</p>
+  <pre class="msg">[PEDIDO DE PARCEIRO B-000021] Hotel Savoy - receção
+Hóspede: Smith · quarto 214
+Tour: West Tour sex 30/10/2026
+Pessoas: 2
+Para responder: CONFIRMAR B-000021 [nota] ou RECUSAR B-000021 [motivo] (ou no painel).</pre>
+  <p>Se o parceiro pedir uma alteração, chega um pedido novo com <code>Substitui: B-…</code>; ao confirmarem o novo,
+    o antigo é cancelado sozinho. Se o parceiro cancelar, chega <code>[PARCEIRO CANCELOU B-…]</code>.</p>
+
   <h3>Pergunta para o escritório</h3>
   <p>O cliente perguntou algo que o assistente não sabe. O cliente fica a saber que perguntaram ao escritório.</p>
   <pre class="msg">[PERGUNTA AQ-000012]
@@ -79,6 +89,10 @@ Para responder: AGENDAR MNT-000003 AAAA-MM-DD, FEITO MNT-000003 ou DISPENSAR MNT
       <tr><td><code>FEITO MNT-xxxxxx</code> / <code>DISPENSAR MNT-xxxxxx</code></td><td>Fecha uma manutenção (feita / não era nada).</td></tr>
       <tr><td>Foto de uma folha de serviço</td><td>O assistente lê a folha e cria um rascunho. Confirmar: <code>FOLHA OK</code> nº, apagar: <code>FOLHA APAGAR</code> nº.</td></tr>
       <tr><td><code>CANCELAR</code> data tour<code>:</code> motivo</td><td>Cancelar um tour nesse dia (ex.: <code>CANCELAR 24/10 West Tour: estrada fechada</code>, ou <code>TODOS</code>). Primeiro mostra quem vai ser avisado; com <code>CANCELAR OK</code> + código avisa todos, cada um na sua língua.</td></tr>
+      <tr><td><code>LIÇÃO</code> texto</td><td>Ensina o assistente a comportar-se (ex.: <code>LIÇÃO a poncha faz-se com aguardente ou rum, e serve-se fria</code>). Aplica-se logo a partir da mensagem seguinte, e o programador é avisado para corrigir de vez.</td></tr>
+      <tr><td><code>LIÇÕES</code></td><td>Lista as lições. <code>LIÇÃO DESLIGAR L-3</code>, <code>LIÇÃO LIGAR L-3</code>, <code>LIÇÃO APAGAR L-3</code>.</td></tr>
+      <tr><td><code>PARCEIRO</code> telefone nome</td><td>Marca a conversa de um hotel ou agência como parceiro (ex.: <code>PARCEIRO 351291000000 Hotel Savoy - receção</code>, ou com <code>C-12</code>). <code>PARCEIROS</code> lista-os; <code>PARCEIRO REMOVER</code> nome.</td></tr>
+      <tr><td><code>PARCEIRO CONTA</code> nome [mês]</td><td>As reservas confirmadas desse parceiro no mês, com o total de pessoas (ex.: <code>PARCEIRO CONTA Savoy outubro</code>).</td></tr>
       <tr><td><code>.erro</code> o que correu mal</td><td>Avisa o programador de um erro do assistente (na última conversa, ou <code>.erro C-12 …</code>).</td></tr>
       <tr><td><code>.ideia</code> texto</td><td>Ideia, pedido ou pergunta para o programador.</td></tr>
       <tr><td><code>AJUDA</code></td><td>Mostra a lista de comandos.</td></tr>
@@ -89,6 +103,14 @@ Para responder: AGENDAR MNT-000003 AAAA-MM-DD, FEITO MNT-000003 ou DISPENSAR MNT
   <p>Ao fim da tarde (18:00), cada cliente com reserva <strong>confirmada</strong> para amanhã recebe um lembrete,
     com a nota que escreveram no <code>CONFIRMAR</code> (ex.: hora de recolha). Quem faz dois dias seguidos recebe
     só um, antes do primeiro. O grupo de operações recebe a lista: <code>Lembretes de amanhã enviados: …</code></p>
+
+  <h3>Conversas de parceiros (hotéis, agências)</h3>
+  <p>Uma receção ou agência escreve sempre da mesma conversa, cada vez para um hóspede diferente. Numa conversa
+    marcada como <strong>parceiro</strong>, o assistente pede só o necessário (nome do hóspede, tour, data,
+    pessoas; quarto e telefone se quiserem) e envia o pedido ao escritório. Nunca dá preços nessa conversa.
+    Alterar ou cancelar: o parceiro diz o nome ou a referência, o assistente repete a reserva e pede "sim/não".
+    A confirmação e o lembrete vão para o telefone do hóspede se o parceiro o deu; se não, para a conversa do
+    parceiro, com o nome do hóspede.</p>
 
   <h2>3. Comandos dentro da conversa com um cliente</h2>
   <p>Quem tem o telefone ou o WhatsApp da Feeling pode escrever estes comandos <strong>dentro da conversa de
@@ -104,6 +126,7 @@ Para responder: AGENDAR MNT-000003 AAAA-MM-DD, FEITO MNT-000003 ou DISPENSAR MNT
       <tr><td><code>.novo</code></td><td>Recomeça do zero: o assistente esquece a reserva em curso e as mensagens anteriores.</td></tr>
       <tr><td><code>.guardar</code> nota</td><td>Guarda a conversa para mais tarde (aparece no painel).</td></tr>
       <tr><td><code>.erro</code> nota</td><td>Avisa o programador de um erro nesta conversa.</td></tr>
+      <tr><td><code>.licao</code> texto</td><td>Uma lição sobre esta conversa (ex.: o assistente disse algo errado). Aplica-se logo e o programador é avisado.</td></tr>
       <tr><td><code>.pararTudo</code> / <code>.iniciarTudo</code></td><td>Desliga / liga o assistente em <strong>todas</strong> as conversas de uma vez.</td></tr>
       <tr><td><code>.ajuda</code></td><td>Mostra esta lista.</td></tr>
     </tbody>
@@ -116,13 +139,16 @@ Para responder: AGENDAR MNT-000003 AAAA-MM-DD, FEITO MNT-000003 ou DISPENSAR MNT
     <li>Nunca diz que uma reserva está confirmada, nem que há lugar: isso é sempre com vocês.</li>
     <li>Os preços e os dias vêm do site. Se o site estiver errado, o assistente também erra. Por isso é importante corrigir o site.</li>
     <li>Dá sempre o total para o grupo, e pergunta quantas pessoas são antes de dar preços.</li>
+    <li>Nas conversas de parceiros nunca dá preços.</li>
+    <li>As vossas lições contam mais do que o que o assistente sabia, mas nunca mudam preços, datas ou lugares.</li>
     <li>Nunca diz que é um robô ou uma inteligência artificial.</li>
   </ul>
 
   <h2>5. O painel no computador</h2>
   <p>Tudo o que está acima também se faz com um clique no painel: <strong>Reservas</strong> (confirmar,
     recusar), <strong>Perguntas</strong> (responder, "lembrar para os próximos clientes"),
-    <strong>Conversas</strong> (ver tudo em direto, responder, devolver ao assistente) e
+    <strong>Conversas</strong> (ver tudo em direto, responder, devolver ao assistente),
+    <strong>Parceiros</strong> (lista e conta por mês), <strong>Lições</strong> (acrescentar, ligar, desligar) e
     <strong>Manutenção</strong>.</p>
 
   <p><a href="questionario.html">Ir para o questionário →</a></p>
